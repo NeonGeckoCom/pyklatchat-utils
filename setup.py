@@ -74,6 +74,7 @@ setuptools.setup(
     python_requires='>=3.6',
     install_requires=get_requirements("requirements.txt"),
     extras_require={
+        "sql": get_requirements("sql.txt"),
         "test": get_requirements("test_requirements.txt")
     }
 )

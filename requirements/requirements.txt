@@ -2,4 +2,4 @@ sshtunnel
 starlette
 pymongo
 neon-sftp
-mysql
+jinja2
