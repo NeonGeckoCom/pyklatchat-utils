@@ -26,46 +26,10 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from abc import ABC, abstractmethod
-from typing import Optional, Union
-from enum import Enum
-
-
-class DatabaseTypes(Enum):
-    RELATIONAL = 1
-    NOSQL = 2
-
-
-class DatabaseConnector(ABC):
-    """Base class for database"""
-
-    def __init__(self, config_data: dict):
-        self.config_data = config_data
-        self._cnx = None
-
-    @property
-    @abstractmethod
-    def database_type(self) -> DatabaseTypes:
-        pass
-
-    @property
-    def connection(self):
-        return self._cnx
-
-    @abstractmethod
-    def create_connection(self):
-        """Creates new database connection"""
-        pass
-
-    @abstractmethod
-    def abort_connection(self):
-        """Aborts existing connection"""
-        pass
-
-    @abstractmethod
-    def exec_raw_query(self, query: Union[str, dict], *args, **kwargs) -> Optional[Union[list, dict]]:
-        """
-            Executes raw query returns result if needed
-            :param query: query to execute
-        """
-        pass
+from pyklatchat_utils.database_utils.mongo_utils.structures import (
+    MongoFilter,
+    MongoCommands,
+    MongoQuery,
+    MongoDocuments,
+    MongoLogicalOperators,
+)
