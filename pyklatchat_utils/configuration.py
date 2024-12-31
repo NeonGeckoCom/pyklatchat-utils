@@ -30,11 +30,11 @@ import os
 import json
 from abc import ABC, abstractmethod
 
-from os.path import isfile, join, dirname
+from os.path import join, dirname
 
 # from neon_utils.log_aggregators import init_log_aggregators
 from ovos_config.config import Configuration
-from ovos_utils import deprecated
+from ovos_utils.log import deprecated
 
 from utils.exceptions import MalformedConfigurationException
 from utils.logging_utils import LOG

@@ -1,6 +1,5 @@
 starlette
 pymongo
-neon-sftp
 jinja2
 neon-utils~=1.0
 ovos-utils~=0.0
