@@ -26,7 +26,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from pyklatchat_utils.http_exceptions import ItemNotFoundException
+from pyklatchat_utils.exceptions import ItemNotFoundException
 from pyklatchat_utils.database_utils.mongo_utils import MongoDocuments, MongoFilter
 from pyklatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
 from neon_utils.logger import LOG
@@ -46,8 +46,8 @@ class ConfigsDAO(MongoDocumentDAO):
         if item:
             return item.get("value")
         else:
-            LOG.error(f"Failed to get config by {config_name = }, {version = }")
-            raise ItemNotFoundException
+            LOG.error(f"Failed to get config by {config_name}, {version}")
+            raise ItemNotFoundException()
 
     def update_by_name(self, config_name: str, data: dict, version: str = "latest"):
         filters = [
