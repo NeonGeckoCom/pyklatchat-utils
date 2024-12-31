@@ -34,10 +34,9 @@ from os.path import join, dirname
 
 # from neon_utils.log_aggregators import init_log_aggregators
 from ovos_config.config import Configuration
-from ovos_utils.log import deprecated
+from ovos_utils.log import LOG, deprecated
 
-from utils.exceptions import MalformedConfigurationException
-from utils.logging_utils import LOG
+from pyklatchat_utils.exceptions import MalformedConfigurationException
 
 
 class KlatConfigurationBase(ABC):
