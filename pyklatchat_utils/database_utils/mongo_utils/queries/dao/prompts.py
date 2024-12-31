@@ -37,7 +37,7 @@ from pyklatchat_utils.database_utils.mongo_utils import (
     MongoLogicalOperators,
 )
 from pyklatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
-from pyklatchat_utils.logging_utils import LOG
+from neon_utils.logger import LOG
 
 
 class PromptStates(IntEnum):

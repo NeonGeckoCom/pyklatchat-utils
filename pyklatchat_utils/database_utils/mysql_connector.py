@@ -30,7 +30,7 @@ from mysql.connector import connection
 
 from typing import Optional
 from pyklatchat_utils.database_utils.base_connector import DatabaseConnector, DatabaseTypes
-from pyklatchat_utils.logging_utils import LOG
+from neon_utils.logger import LOG
 
 
 class MySQLConnector(DatabaseConnector):

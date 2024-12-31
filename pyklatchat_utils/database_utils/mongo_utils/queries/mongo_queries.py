@@ -31,7 +31,7 @@ from typing import List, Tuple
 from pyklatchat_utils.database_utils.mongo_utils.structures import MongoFilter
 from pyklatchat_utils.database_utils.mongo_utils.queries.constants import UserPatterns, ConversationSkins
 from pyklatchat_utils.database_utils.mongo_utils.queries.wrapper import MongoDocumentsAPI
-from pyklatchat_utils.logging_utils import LOG
+from neon_utils.logger import LOG
 
 
 def get_translations(

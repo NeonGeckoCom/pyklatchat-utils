@@ -30,7 +30,7 @@ from time import time
 from typing import Union
 
 from pyklatchat_utils.common import generate_uuid, get_hash
-from pyklatchat_utils.logging_utils import LOG
+from neon_utils.logger import LOG
 from pyklatchat_utils.database_utils.mongo_utils import (
     MongoCommands,
     MongoDocuments,

@@ -29,7 +29,7 @@
 from pyklatchat_utils.http_exceptions import ItemNotFoundException
 from pyklatchat_utils.database_utils.mongo_utils import MongoDocuments, MongoFilter
 from pyklatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
-from pyklatchat_utils.logging_utils import LOG
+from neon_utils.logger import LOG
 
 
 class ConfigsDAO(MongoDocumentDAO):

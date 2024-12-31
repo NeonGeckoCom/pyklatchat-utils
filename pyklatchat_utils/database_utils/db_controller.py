@@ -27,7 +27,7 @@
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from pyklatchat_utils.database_utils.mongodb_connector import MongoDBConnector
 from pyklatchat_utils.database_utils.base_connector import DatabaseConnector, DatabaseTypes
-from pyklatchat_utils.logging_utils import LOG
+from neon_utils.logger import LOG
 
 try:
     from pyklatchat_utils.database_utils.mysql_connector import MySQLConnector
