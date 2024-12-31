@@ -1,27 +1,56 @@
+from io import BytesIO
 from unittest import TestCase
 
 
 class TestCommon(TestCase):
     def test_generate_uuid(self):
         from pyklatchat_utils.common import generate_uuid
-        # TODO
+
+        # Default behavior
+        self.assertIsInstance(generate_uuid(), str)
+
+        # Maximum len
+        long_uuid = generate_uuid(32)
+        self.assertIsInstance(long_uuid, str)
+        self.assertEqual(len(long_uuid), 32)
+
+        # Minimum len
+        long_uuid = generate_uuid(1)
+        self.assertIsInstance(long_uuid, str)
+        self.assertEqual(len(long_uuid), 1)
+
+        # Error minimum len
+        with self.assertRaises(ValueError):
+            generate_uuid(0)
+
+        # Error maximum len
+        with self.assertRaises(ValueError):
+            generate_uuid(33)
 
     def test_get_hash(self):
         from pyklatchat_utils.common import get_hash
-        # TODO
+        test_string = "test"
 
-    def test_get_version(self):
-        from pyklatchat_utils.common import get_version
-        # TODO
+        # Default behavior
+        self.assertIsInstance(get_hash(test_string), str)
 
-    def test_deep_merge(self):
-        from pyklatchat_utils.common import deep_merge
-        # TODO
+        # Valid hash
+        self.assertIsInstance(get_hash(test_string, algo="sha1"), str)
+
+        # Invalid hash
+        with self.assertRaises(ValueError):
+            get_hash(test_string, algo="some_invalid_hash")
+
+        # TODO: Test encoding
 
     def test_buffer_to_base64(self):
         from pyklatchat_utils.common import buffer_to_base64
-        # TODO
-
-    def test_base64_to_buffer(self):
         from pyklatchat_utils.common import base64_to_buffer
-        # TODO
+
+        test_bytes = BytesIO(b"test")
+        encoded = buffer_to_base64(test_bytes)
+        self.assertIsInstance(encoded, str)
+        self.assertEqual(base64_to_buffer(encoded).getvalue(),
+                         test_bytes.getvalue())
+
+        # TODO: Test edge/error cases

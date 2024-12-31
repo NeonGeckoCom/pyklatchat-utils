@@ -31,7 +31,7 @@ from io import BytesIO
 from uuid import uuid4
 
 
-def generate_uuid(length=10) -> str:
+def generate_uuid(length: int = 10) -> str:
     """
     Generates UUID string of desired length
 
@@ -39,6 +39,10 @@ def generate_uuid(length=10) -> str:
 
     :returns UUID string of the desired length
     """
+    if length > 32:
+        raise ValueError("Length cannot be greater than 32")
+    if length < 1:
+        raise ValueError("Length must be greater than 0")
     return uuid4().hex[:length]
 
 
@@ -54,7 +58,11 @@ def get_hash(input_str: str, encoding="utf-8", algo="sha512") -> str:
 
     :returns hashed string from the provided input
     """
-    return getattr(hashlib, algo)(input_str.encode(encoding)).hexdigest()
+    try:
+        method = getattr(hashlib, algo)
+    except AttributeError:
+        raise ValueError(f"{algo} is not a supported algorithm")
+    return method(input_str.encode(encoding)).hexdigest()
 
 
 def get_version(from_path: str = None):
