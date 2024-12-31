@@ -65,7 +65,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/neongeckocom/pyklatchat-utils",
     packages=setuptools.find_packages(),
-    package_data={'': ['*.yml']},
+    package_data={'': ['*.yml', '*.html']},
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",

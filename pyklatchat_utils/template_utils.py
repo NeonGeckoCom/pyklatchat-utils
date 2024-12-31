@@ -26,21 +26,25 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
+from os import environ
+from os.path import join, dirname
+from typing import Optional
 
 from starlette.requests import Request
+from starlette.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
 
+environ.setdefault('TEMPLATES_DIR', join(dirname(__file__), 'templates'))
+component_templates = Jinja2Templates(directory=environ['TEMPLATES_DIR'])
 
-component_templates = Jinja2Templates(directory=os.environ.get('TEMPLATES_DIR', "chat_client/templates"))
 
-
-def callback_template(request: Request, template_name: str, context: dict = None):
+def callback_template(request: Request, template_name: str,
+                      context: Optional[dict] = None) -> HTMLResponse:
     """
-        Returns template response based on provided params
-        :param request: FastAPI request object
-        :param template_name: name of template to render
-        :param context: supportive context to add
+    Returns template response based on provided params
+    :param request: FastAPI request object
+    :param template_name: name of template to render
+    :param context: supportive context to add
     """
     if not context:
         context = {}
