@@ -31,6 +31,7 @@ import json
 from abc import ABC, abstractmethod
 
 from os.path import join, dirname
+from typing import Tuple, Optional
 
 # from neon_utils.log_aggregators import init_log_aggregators
 from ovos_config.config import Configuration
@@ -43,7 +44,7 @@ class KlatConfigurationBase(ABC):
     """Generic configuration module"""
 
     def __init__(self):
-        self._config_data: dict = None
+        self._config_data: Optional[dict] = None
         self._init_ovos_config()
         if not self._config_data:
             LOG.warning(
@@ -81,7 +82,7 @@ class KlatConfigurationBase(ABC):
 
     @property
     @abstractmethod
-    def required_sub_keys(self) -> tuple[str]:
+    def required_sub_keys(self) -> Tuple[str]:
         pass
 
     @property
