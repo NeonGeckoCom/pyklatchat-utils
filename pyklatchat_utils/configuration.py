@@ -28,12 +28,9 @@
 
 import os
 import json
+
 from abc import ABC, abstractmethod
-
-from os.path import join, dirname
-from typing import Tuple, Optional
-
-# from neon_utils.log_aggregators import init_log_aggregators
+from typing import Tuple, Optional, Any
 from ovos_config.config import Configuration
 from ovos_utils.log import LOG, deprecated
 
@@ -52,66 +49,8 @@ class KlatConfigurationBase(ABC):
                 f"trying setting up legacy config"
             )
             self._init_legacy_config()
-        self._config_data = self._config_data[self.config_key]
         self.validate_provided_configuration()
         # init_log_aggregators(config=self.config_data)
-
-    def _init_ovos_config(self):
-        ovos_config = _load_ovos_config()
-        if self.config_key in ovos_config:
-            self._config_data = ovos_config
-
-    @deprecated("Legacy configuration is deprecated",
-                "0.0.1")
-    def _init_legacy_config(self):
-        legacy_config_path = os.path.expanduser(
-            os.environ.get(
-                f"{self.config_key}_CONFIG", "~/.local/share/neon/credentials.json"
-            )
-        )
-        self.add_new_config_properties(
-            self.extract_config_from_path(legacy_config_path)
-        )
-
-    def validate_provided_configuration(self):
-        for key in self.required_sub_keys:
-            if key not in self._config_data:
-                return MalformedConfigurationException(
-                    f"Required configuration {key = !r} is missing"
-                )
-
-    @property
-    @abstractmethod
-    def required_sub_keys(self) -> Tuple[str]:
-        pass
-
-    @property
-    @abstractmethod
-    def config_key(self) -> str:
-        pass
-
-    def add_new_config_properties(self, new_config_dict: dict, at_key: str = None):
-        """
-        Adds new configuration properties to existing configuration dict
-
-        :param new_config_dict: dictionary containing new configuration
-        :param at_key: the key at which to append new dictionary
-                        (optional but setting that will reduce possible future key conflicts)
-        """
-        if at_key:
-            self.config_data[at_key] = new_config_dict
-        else:
-            # merge existing config with new dictionary (python 3.5+ syntax)
-            self.config_data |= new_config_dict
-
-    def get(self, key, default=None):
-        return self.config_data.get(key, default)
-
-    def __getitem__(self, key):
-        return self.config_data.get(key)
-
-    def __setitem__(self, key, value):
-        self.config_data[key] = value
 
     @property
     def config_data(self) -> dict:
@@ -120,10 +59,77 @@ class KlatConfigurationBase(ABC):
         return self._config_data
 
     @config_data.setter
-    def config_data(self, value):
+    def config_data(self, value: dict):
         if not isinstance(value, dict):
             raise TypeError(f"Type: {type(value)} not supported")
         self._config_data = value
+
+    @property
+    @abstractmethod
+    def required_sub_keys(self) -> Tuple[str]:
+        """
+        Override to specify required configuration parameters for this module
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def config_key(self) -> str:
+        """
+        Override to specify the top-level configuration key associated with this
+        module.
+        """
+        pass
+
+    def _init_ovos_config(self):
+        ovos_config = Configuration()
+        if self.config_key in ovos_config:
+            self._config_data = ovos_config.get(self.config_key)
+
+    @deprecated("Legacy configuration is deprecated",
+                "0.0.1")
+    def _init_legacy_config(self):
+        legacy_config_path = os.path.expanduser(
+            os.environ.get(
+                f"{self.config_key}_CONFIG",
+                "~/.local/share/neon/credentials.json"
+            )
+        )
+        self.add_new_config_properties(
+            self.extract_config_from_path(legacy_config_path)
+        )
+        self._config_data = self._config_data[self.config_key]
+
+    def validate_provided_configuration(self):
+        for key in self.required_sub_keys:
+            if key not in self._config_data:
+                return MalformedConfigurationException(
+                    f"Required configuration {key=!r} is missing"
+                )
+
+    def add_new_config_properties(self, new_config_dict: dict,
+                                  at_key: Optional[str] = None):
+        """
+        Adds new configuration properties to existing configuration dict. This
+        does not modify the configuration on-disk, so changes WILL NOT persist.
+        :param new_config_dict: dictionary containing new configuration
+        :param at_key: If specified, set configuration at that key to the new
+          value, else merge the new value with the existing configuration
+        """
+        if at_key:
+            self.config_data[at_key] = new_config_dict
+        else:
+            # merge existing config with new dictionary (python 3.5+ syntax)
+            self.config_data |= new_config_dict
+
+    def get(self, key: str, default: Any = None):
+        return self.config_data.get(key, default)
+
+    def __getitem__(self, key):
+        return self.config_data.get(key)
+
+    def __setitem__(self, key, value):
+        self.config_data[key] = value
 
     @staticmethod
     def extract_config_from_path(file_path: str) -> dict:
@@ -144,16 +150,3 @@ class KlatConfigurationBase(ABC):
             extraction_result = dict()
         # LOG.info(f'Extracted config: {extraction_result}')
         return extraction_result
-
-
-def _load_ovos_config() -> dict:
-    """
-    Load and return a configuration object,
-    """
-    config = Configuration()
-    if not config:
-        LOG.warning(f"No configuration found! falling back to defaults")
-        default_config_path = join(dirname(__file__), "default_config.json")
-        with open(default_config_path) as f:
-            config = json.load(f)
-    return dict(config)
