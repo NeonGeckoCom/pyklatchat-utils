@@ -89,23 +89,25 @@ class KlatConfigurationBase(ABC):
     @deprecated("Legacy configuration is deprecated",
                 "0.0.1")
     def _init_legacy_config(self):
-        legacy_config_path = os.path.expanduser(
-            os.environ.get(
-                f"{self.config_key}_CONFIG",
-                "~/.local/share/neon/credentials.json"
+        try:
+            legacy_config_path = os.path.expanduser(
+                os.environ.get(
+                    f"{self.config_key}_CONFIG",
+                    "~/.local/share/neon/credentials.json"
+                )
             )
-        )
-        self.add_new_config_properties(
-            self.extract_config_from_path(legacy_config_path)
-        )
-        self._config_data = self._config_data[self.config_key]
+            self.add_new_config_properties(
+                self.extract_config_from_path(legacy_config_path)
+            )
+            self._config_data = self._config_data[self.config_key]
+        except KeyError as e:
+            raise MalformedConfigurationException(e)
 
     def validate_provided_configuration(self):
         for key in self.required_sub_keys:
             if key not in self._config_data:
-                return MalformedConfigurationException(
-                    f"Required configuration {key=!r} is missing"
-                )
+                raise MalformedConfigurationException(
+                    f"Required configuration {key=!r} is missing")
 
     def add_new_config_properties(self, new_config_dict: dict,
                                   at_key: Optional[str] = None):
