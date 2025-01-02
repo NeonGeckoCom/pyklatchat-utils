@@ -29,8 +29,8 @@
 from typing import Optional, Union
 from pymongo import MongoClient
 
-from pyklatchat_utils.database_utils.base_connector import DatabaseConnector, DatabaseTypes
-from pyklatchat_utils.database_utils.mongo_utils.structures import MongoQuery, MongoCommands
+from klatchat_utils.database_utils.base_connector import DatabaseConnector, DatabaseTypes
+from klatchat_utils.database_utils.mongo_utils.structures import MongoQuery, MongoCommands
 from neon_utils.logger import LOG
 
 

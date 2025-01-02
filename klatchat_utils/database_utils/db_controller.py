@@ -25,12 +25,12 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from pyklatchat_utils.database_utils.mongodb_connector import MongoDBConnector
-from pyklatchat_utils.database_utils.base_connector import DatabaseConnector, DatabaseTypes
+from klatchat_utils.database_utils.mongodb_connector import MongoDBConnector
+from klatchat_utils.database_utils.base_connector import DatabaseConnector, DatabaseTypes
 from neon_utils.logger import LOG
 
 try:
-    from pyklatchat_utils.database_utils.mysql_connector import MySQLConnector
+    from klatchat_utils.database_utils.mysql_connector import MySQLConnector
 except ModuleNotFoundError:
     LOG.info("MySQL dependency was not installed")
     MySQLConnector = None

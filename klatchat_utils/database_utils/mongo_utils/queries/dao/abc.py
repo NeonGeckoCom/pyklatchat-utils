@@ -31,8 +31,8 @@ from abc import ABC, abstractmethod
 import pymongo
 from neon_sftp import NeonSFTPConnector
 
-from pyklatchat_utils.database_utils import DatabaseController
-from pyklatchat_utils.database_utils.mongo_utils import (
+from klatchat_utils.database_utils import DatabaseController
+from klatchat_utils.database_utils.mongo_utils import (
     MongoQuery,
     MongoCommands,
     MongoFilter,

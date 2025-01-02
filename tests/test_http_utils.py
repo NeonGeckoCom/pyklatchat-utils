@@ -34,7 +34,7 @@ from unittest.mock import Mock
 
 class TestHttpUtils(TestCase):
     def test_respond(self):
-        from pyklatchat_utils.http_utils import respond
+        from klatchat_utils.http_utils import respond
 
         # Test valid response
         resp = respond("Test Message", 500)
@@ -47,6 +47,6 @@ class TestHttpUtils(TestCase):
 
     def test_response_ok(self):
         from starlette.responses import JSONResponse
-        from pyklatchat_utils.http_utils import response_ok
+        from klatchat_utils.http_utils import response_ok
         self.assertIsInstance(response_ok, JSONResponse)
         self.assertEqual(response_ok.status_code, 200)

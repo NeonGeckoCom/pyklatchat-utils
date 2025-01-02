@@ -36,7 +36,7 @@ from starlette.templating import Jinja2Templates
 
 class TestTemplateUtils(TestCase):
     def test_component_templates(self):
-        from pyklatchat_utils.template_utils import component_templates
+        from klatchat_utils.template_utils import component_templates
         self.assertIsInstance(component_templates, Jinja2Templates)
         # Valid Component
         self.assertIsInstance(component_templates.get_template(
@@ -46,7 +46,7 @@ class TestTemplateUtils(TestCase):
             component_templates.get_template("invalid_template.html")
 
     def test_callback_template(self):
-        from pyklatchat_utils.template_utils import callback_template
+        from klatchat_utils.template_utils import callback_template
         request = Mock()
         context = {"test": True}
 

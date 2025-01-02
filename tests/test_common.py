@@ -32,7 +32,7 @@ from unittest import TestCase
 
 class TestCommon(TestCase):
     def test_generate_uuid(self):
-        from pyklatchat_utils.common import generate_uuid
+        from klatchat_utils.common import generate_uuid
 
         # Default behavior
         self.assertIsInstance(generate_uuid(), str)
@@ -56,7 +56,7 @@ class TestCommon(TestCase):
             generate_uuid(33)
 
     def test_get_hash(self):
-        from pyklatchat_utils.common import get_hash
+        from klatchat_utils.common import get_hash
         test_string = "test"
 
         # Default behavior
@@ -72,8 +72,8 @@ class TestCommon(TestCase):
         # TODO: Test encoding
 
     def test_buffer_to_base64(self):
-        from pyklatchat_utils.common import buffer_to_base64
-        from pyklatchat_utils.common import base64_to_buffer
+        from klatchat_utils.common import buffer_to_base64
+        from klatchat_utils.common import base64_to_buffer
 
         test_bytes = BytesIO(b"test")
         encoded = buffer_to_base64(test_bytes)

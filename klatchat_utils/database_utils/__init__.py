@@ -26,43 +26,4 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from mysql.connector import connection
-
-from typing import Optional
-from pyklatchat_utils.database_utils.base_connector import DatabaseConnector, DatabaseTypes
-from neon_utils.logger import LOG
-
-
-class MySQLConnector(DatabaseConnector):
-    """Base connector for all MySQL-related dbs"""
-
-    @property
-    def database_type(self):
-        return DatabaseTypes.RELATIONAL
-
-    def create_connection(self):
-        self._cnx = connection.MySQLConnection(**self.config_data)
-
-    def abort_connection(self):
-        self._cnx.close()
-
-    def exec_raw_query(
-        self, query: str, generator: bool = False, *args, **kwargs
-    ) -> Optional[list]:
-        """Executes raw string query and returns its results
-
-        :param query: valid SQL query string
-        :param generator: to return cursor as generator object (defaults to False)
-
-        :returns query result if any
-        """
-        cursor = self.connection.cursor(dictionary=True)
-        cursor.execute(query, *args, **kwargs)
-        result = None
-        try:
-            result = cursor.fetchall()
-        except Exception as ex:
-            LOG.error(ex)
-        finally:
-            cursor.close()
-            return result
+from klatchat_utils.database_utils.db_controller import DatabaseController

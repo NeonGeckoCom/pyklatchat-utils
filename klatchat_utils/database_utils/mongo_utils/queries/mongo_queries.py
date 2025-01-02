@@ -28,9 +28,9 @@
 from time import time
 from typing import List, Tuple
 
-from pyklatchat_utils.database_utils.mongo_utils.structures import MongoFilter
-from pyklatchat_utils.database_utils.mongo_utils.queries.constants import UserPatterns, ConversationSkins
-from pyklatchat_utils.database_utils.mongo_utils.queries.wrapper import MongoDocumentsAPI
+from klatchat_utils.database_utils.mongo_utils.structures import MongoFilter
+from klatchat_utils.database_utils.mongo_utils.queries.constants import UserPatterns, ConversationSkins
+from klatchat_utils.database_utils.mongo_utils.queries.wrapper import MongoDocumentsAPI
 from neon_utils.logger import LOG
 
 

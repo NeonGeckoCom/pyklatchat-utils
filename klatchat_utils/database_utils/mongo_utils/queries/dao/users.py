@@ -29,16 +29,16 @@ import copy
 from time import time
 from typing import Union
 
-from pyklatchat_utils.common import generate_uuid, get_hash
+from klatchat_utils.common import generate_uuid, get_hash
 from neon_utils.logger import LOG
-from pyklatchat_utils.database_utils.mongo_utils import (
+from klatchat_utils.database_utils.mongo_utils import (
     MongoCommands,
     MongoDocuments,
     MongoQuery,
     MongoFilter,
 )
-from pyklatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
-from pyklatchat_utils.database_utils.mongo_utils.queries.constants import UserPatterns
+from klatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
+from klatchat_utils.database_utils.mongo_utils.queries.constants import UserPatterns
 
 
 class UsersDAO(MongoDocumentDAO):

@@ -31,12 +31,12 @@ from typing import Union, List
 
 from bson import ObjectId
 
-from pyklatchat_utils.database_utils.mongo_utils import (
+from klatchat_utils.database_utils.mongo_utils import (
     MongoDocuments,
     MongoFilter,
     MongoLogicalOperators,
 )
-from pyklatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
+from klatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
 from neon_utils.logger import LOG
 
 

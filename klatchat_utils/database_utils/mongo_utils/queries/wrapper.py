@@ -27,13 +27,13 @@
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # DAO Imports
-from pyklatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
-from pyklatchat_utils.database_utils.mongo_utils.queries.dao.configs import ConfigsDAO
-from pyklatchat_utils.database_utils.mongo_utils.queries.dao.users import UsersDAO
-from pyklatchat_utils.database_utils.mongo_utils.queries.dao.chats import ChatsDAO
-from pyklatchat_utils.database_utils.mongo_utils.queries.dao.shouts import ShoutsDAO
-from pyklatchat_utils.database_utils.mongo_utils.queries.dao.prompts import PromptsDAO
-from pyklatchat_utils.database_utils.mongo_utils.queries.dao.personas import PersonasDAO
+from klatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
+from klatchat_utils.database_utils.mongo_utils.queries.dao.configs import ConfigsDAO
+from klatchat_utils.database_utils.mongo_utils.queries.dao.users import UsersDAO
+from klatchat_utils.database_utils.mongo_utils.queries.dao.chats import ChatsDAO
+from klatchat_utils.database_utils.mongo_utils.queries.dao.shouts import ShoutsDAO
+from klatchat_utils.database_utils.mongo_utils.queries.dao.prompts import PromptsDAO
+from klatchat_utils.database_utils.mongo_utils.queries.dao.personas import PersonasDAO
 
 
 class MongoDAOGateway(type):

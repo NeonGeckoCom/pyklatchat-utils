@@ -27,7 +27,7 @@
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import http
 
-from pyklatchat_utils.http_utils import respond
+from klatchat_utils.http_utils import respond
 
 
 class KlatchatException(Exception):

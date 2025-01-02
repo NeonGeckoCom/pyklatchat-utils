@@ -26,9 +26,9 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from pyklatchat_utils.exceptions import ItemNotFoundException
-from pyklatchat_utils.database_utils.mongo_utils import MongoDocuments, MongoFilter
-from pyklatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
+from klatchat_utils.exceptions import ItemNotFoundException
+from klatchat_utils.database_utils.mongo_utils import MongoDocuments, MongoFilter
+from klatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
 from neon_utils.logger import LOG
 
 

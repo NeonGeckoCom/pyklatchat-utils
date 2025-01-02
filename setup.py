@@ -55,7 +55,7 @@ with open(path.join(BASE_PATH, "version.py"), "r", encoding="utf-8") as v:
                 version = line.split("'")[1]
 
 setuptools.setup(
-    name="pyklatchat-utils",
+    name="klatchat-utils",
     version=version,
     author='Neongecko',
     author_email='developers@neon.ai',

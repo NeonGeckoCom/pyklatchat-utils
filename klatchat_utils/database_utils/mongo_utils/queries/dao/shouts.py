@@ -30,15 +30,15 @@ from typing import List, Dict
 from ovos_utils import LOG
 from pymongo import UpdateOne
 
-from pyklatchat_utils.common import buffer_to_base64
-from pyklatchat_utils.database_utils.mongo_utils import (
+from klatchat_utils.common import buffer_to_base64
+from klatchat_utils.database_utils.mongo_utils import (
     MongoDocuments,
     MongoCommands,
     MongoFilter,
     MongoLogicalOperators,
     MongoQuery,
 )
-from pyklatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
+from klatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
 
 
 class ShoutsDAO(MongoDocumentDAO):

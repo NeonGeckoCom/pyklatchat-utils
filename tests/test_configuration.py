@@ -29,8 +29,8 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from pyklatchat_utils.configuration import KlatConfigurationBase
-from pyklatchat_utils.exceptions import MalformedConfigurationException
+from klatchat_utils.configuration import KlatConfigurationBase
+from klatchat_utils.exceptions import MalformedConfigurationException
 
 
 class MockConfig(KlatConfigurationBase):
@@ -63,7 +63,7 @@ mock_missing_sub_key = {
 
 
 class TestConfiguration(TestCase):
-    @patch("pyklatchat_utils.configuration.Configuration")
+    @patch("klatchat_utils.configuration.Configuration")
     def test_valid_klat_configuration(self, config):
         config.return_value = mock_valid_configuration
         klat_config = MockConfig()
@@ -73,7 +73,7 @@ class TestConfiguration(TestCase):
 
         # TODO: Test add_new_config_properties
 
-    @patch("pyklatchat_utils.configuration.Configuration")
+    @patch("klatchat_utils.configuration.Configuration")
     def test_invalid_klat_configuration(self, config):
         # Missing module config
         config.return_value = mock_missing_top_key

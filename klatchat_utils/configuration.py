@@ -34,7 +34,7 @@ from typing import Tuple, Optional, Any
 from ovos_config.config import Configuration
 from ovos_utils.log import LOG, deprecated
 
-from pyklatchat_utils.exceptions import MalformedConfigurationException
+from klatchat_utils.exceptions import MalformedConfigurationException
 
 
 class KlatConfigurationBase(ABC):
