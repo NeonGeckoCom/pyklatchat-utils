@@ -26,23 +26,26 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from neon_utils.logger import LOG
+import logging
+import os
+
+from neon_utils.logger import LOG as neon_default_logger
+
+combo_lock_logger = logging.getLogger("combo_lock")
+combo_lock_logger.disabled = True
 
 
-def get_existing_nicks_to_id(mongo_controller) -> dict:
-    """
-    Gets existing nicknames to id mapping from provided mongo db
-
-    :param mongo_controller: controller to active mongo collection
-
-    :returns List of dict containing filtered items
-    """
-    retrieved_data = list(
-        mongo_controller.exec_query(
-            query=dict(document="users", command="find", data={})
-        )
+def _init_app_logger():
+    logger = neon_default_logger
+    logger.name = os.environ.get("LOG_NAME", "klat_server_log")
+    logger.base_path = os.environ.get("LOG_BASE_PATH", ".")
+    logger.init(
+        config={
+            "level": os.environ.get("LOG_LEVEL", "INFO"),
+            "path": os.environ.get("LOG_PATH", os.getcwd()),
+        }
     )
+    return logger
 
-    LOG.info(f"Retrieved {len(retrieved_data)} existing nicknames from new db")
 
-    return {record["nickname"]: record["_id"] for record in list(retrieved_data)}
+LOG = _init_app_logger()

@@ -25,24 +25,6 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+import os
 
-from neon_utils.logger import LOG
-
-
-def get_existing_nicks_to_id(mongo_controller) -> dict:
-    """
-    Gets existing nicknames to id mapping from provided mongo db
-
-    :param mongo_controller: controller to active mongo collection
-
-    :returns List of dict containing filtered items
-    """
-    retrieved_data = list(
-        mongo_controller.exec_query(
-            query=dict(document="users", command="find", data={})
-        )
-    )
-
-    LOG.info(f"Retrieved {len(retrieved_data)} existing nicknames from new db")
-
-    return {record["nickname"]: record["_id"] for record in list(retrieved_data)}
+KLAT_ENV = os.environ.get("KLAT_ENV", "DEV")
