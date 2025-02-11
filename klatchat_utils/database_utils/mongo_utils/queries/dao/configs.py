@@ -46,8 +46,8 @@ class ConfigsDAO(MongoDocumentDAO):
         if item:
             return item.get("value")
         else:
-            LOG.error(f"Failed to get config by {config_name}, {version}")
-            raise ItemNotFoundException()
+            LOG.error(f"Failed to get config by {config_name = }, {version = }")
+            raise ItemNotFoundException
 
     def update_by_name(self, config_name: str, data: dict, version: str = "latest"):
         filters = [

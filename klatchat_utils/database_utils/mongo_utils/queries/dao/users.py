@@ -34,8 +34,8 @@ from neon_utils.logger import LOG
 from klatchat_utils.database_utils.mongo_utils import (
     MongoCommands,
     MongoDocuments,
-    MongoQuery,
     MongoFilter,
+    MongoLogicalOperators,
 )
 from klatchat_utils.database_utils.mongo_utils.queries.dao.abc import MongoDocumentDAO
 from klatchat_utils.database_utils.mongo_utils.queries.constants import UserPatterns
@@ -75,7 +75,10 @@ class UsersDAO(MongoDocumentDAO):
         """Fetches user ids detected in provided prompt"""
         prompt_data = prompt["data"]
         user_ids = prompt_data.get("participating_subminds", [])
-        return self.list_contains(source_set=user_ids)
+        return self.list_contains(
+            source_set=user_ids,
+            project_fields=["_id", "nickname", "first_name", "last_name", "is_bot"],
+        )
 
     @staticmethod
     def create_from_pattern(
@@ -204,3 +207,12 @@ class UsersDAO(MongoDocumentDAO):
         #  https://www.mongodb.com/docs/manual/core/index-ttl/
         self.add_item(data=new_user)
         return new_user
+
+    def get_user_by_nano_token(self, nano_token: str):
+        return self.get_item(
+            filters=MongoFilter(
+                key="tokens",
+                value=[nano_token],
+                logical_operator=MongoLogicalOperators.ALL,
+            )
+        )

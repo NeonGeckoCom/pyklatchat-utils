@@ -29,6 +29,8 @@
 from abc import ABC, abstractmethod
 
 import pymongo
+import pymongo.results
+
 from neon_sftp import NeonSFTPConnector
 
 from klatchat_utils.database_utils import DatabaseController
@@ -59,60 +61,34 @@ class MongoDocumentDAO(ABC):
         key: str = "_id",
         source_set: list = None,
         aggregate_result: bool = True,
+        project_fields: list[str] | None = None,
         *args,
         **kwargs
     ) -> dict[str, list] | list[str]:
         """
         Lists items that are members of :param source_set under the :param key
-        :param key: attribute to query
-        :param source_set: collection of values to lookup
-        :param aggregate_result: to apply aggregation by key on result (defaults to True)
-        :return matching items
+
+        :param key: attribute to the query
+        :param source_set: the collection of values for lookup
+        :param aggregate_result: to apply aggregation by key on the result (defaults to True)
+        :param project_fields: list of fields to return (optional)
+
+        :return matching items if :param aggregate_result = True - as an aggregated dictionary mapping,
+                otherwise as a raw list
         """
         items = {}
         contains_filter = self._build_contains_filter(key=key, lookup_set=source_set)
         if contains_filter:
             filters = kwargs.pop("filters", []) + [contains_filter]
-            items = self.list_items(filters=filters, *args, **kwargs)
+            items = self.list_items(
+                filters=filters, project_fields=project_fields, *args, **kwargs
+            )
             if aggregate_result:
-                items = self.aggregate_items_by_key(key=key, items=items)
+                items = self._aggregate_items_by_key(key=key, items=items)
         return items
 
-    def list_items(
-        self,
-        filters: list[MongoFilter] = None,
-        limit: int = None,
-        ordering_expression: dict[str, int] | None = None,
-        result_as_cursor: bool = True,
-    ) -> dict:
-        """
-        Lists items under provided document belonging to source set of provided column values
-
-        :param filters: filters to consider (optional)
-        :param limit: limit number of returned attributes (optional)
-        :param ordering_expression: items ordering expression (optional)
-        :param result_as_cursor: to return result as cursor (defaults to True)
-        :returns results of FIND operation over the desired document according to applied filters
-        """
-        result_filters = {}
-        if limit:
-            result_filters["limit"] = limit
-        if ordering_expression:
-            result_filters["sort"] = []
-            for attr, order in ordering_expression.items():
-                if order == -1:
-                    result_filters["sort"].append((attr, pymongo.DESCENDING))
-                else:
-                    result_filters["sort"].append((attr, pymongo.ASCENDING))
-        items = self._execute_query(
-            command=MongoCommands.FIND_ALL,
-            filters=filters,
-            result_filters=result_filters,
-            result_as_cursor=result_as_cursor,
-        )
-        return items
-
-    def aggregate_items_by_key(self, key: str, items: list[dict]) -> dict:
+    @staticmethod
+    def _aggregate_items_by_key(key: str, items: list[dict]) -> dict:
         """
         Aggregates list of dictionaries according to the provided key
         :return dictionary mapping id -> list of matching items
@@ -125,6 +101,47 @@ class MongoDocumentDAO(ABC):
                 aggregated_data.setdefault(items_key, []).append(item)
         return aggregated_data
 
+    def list_items(
+        self,
+        filters: list[MongoFilter] = None,
+        limit: int = None,
+        ordering_expression: dict[str, int] | None = None,
+        result_as_cursor: bool = True,
+        project_fields: list[str] | None = None,
+    ) -> dict:
+        """
+        Lists items under the provided document belonging to the source set of provided column values
+
+        :param filters: filters to consider (optional)
+        :param limit: limit number of returned attributes (optional)
+        :param ordering_expression: item's ordering expression (optional)
+        :param result_as_cursor: returns result as a cursor (defaults to True)
+        :param project_fields: list of fields to return (optional)
+
+        :returns results of FIND operation over the desired document according to applied filters
+        """
+        result_filters = {}
+        projection = None
+        if limit:
+            result_filters["limit"] = limit
+        if ordering_expression:
+            result_filters["sort"] = []
+            for attr, order in ordering_expression.items():
+                if order == -1:
+                    result_filters["sort"].append((attr, pymongo.DESCENDING))
+                else:
+                    result_filters["sort"].append((attr, pymongo.ASCENDING))
+        if project_fields:
+            projection = {k: 1 for k in project_fields}
+        items = self._execute_query(
+            command=MongoCommands.FIND_ALL,
+            filters=filters,
+            result_filters=result_filters,
+            result_as_cursor=result_as_cursor,
+            projection=projection,
+        )
+        return items
+
     def _build_list_items_filter(
         self, key, lookup_set, additional_filters: list[MongoFilter]
     ) -> list[MongoFilter] | None:
@@ -134,7 +151,8 @@ class MongoDocumentDAO(ABC):
             mongo_filters.append(contains_filter)
         return mongo_filters
 
-    def _build_contains_filter(self, key, lookup_set) -> MongoFilter | None:
+    @staticmethod
+    def _build_contains_filter(key, lookup_set) -> MongoFilter | None:
         mongo_filter = None
         if key and lookup_set:
             lookup_set = list(set(lookup_set))
@@ -145,13 +163,13 @@ class MongoDocumentDAO(ABC):
             )
         return mongo_filter
 
-    def add_item(self, data: dict) -> bool:
+    def add_item(self, data: dict) -> pymongo.results.InsertOneResult:
         """Inserts provided data into the object's document"""
         return self._execute_query(command=MongoCommands.INSERT_ONE, data=data)
 
     def update_item(
         self, filters: list[dict | MongoFilter], data: dict, data_action: str = "set"
-    ) -> bool:
+    ) -> pymongo.results.UpdateResult:
         """Updates provided data into the object's document"""
         return self._execute_query(
             command=MongoCommands.UPDATE_ONE,
@@ -162,7 +180,7 @@ class MongoDocumentDAO(ABC):
 
     def update_items(
         self, filters: list[dict | MongoFilter], data: dict, data_action: str = "set"
-    ) -> bool:
+    ) -> pymongo.results.UpdateResult:
         """Updates provided data into the object's documents"""
         return self._execute_query(
             command=MongoCommands.UPDATE_MANY,
@@ -181,7 +199,7 @@ class MongoDocumentDAO(ABC):
 
     def delete_item(
         self, item_id: str = None, filters: list[dict | MongoFilter] = None
-    ) -> None:
+    ) -> pymongo.results.DeleteResult:
         filters = self._build_item_selection_filters(item_id=item_id, filters=filters)
         if not filters:
             raise
