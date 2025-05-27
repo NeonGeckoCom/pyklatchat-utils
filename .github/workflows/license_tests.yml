@@ -10,4 +10,4 @@ jobs:
   license_tests:
     uses: neongeckocom/.github/.github/workflows/license_tests.yml@master
     with:
-      packages-exclude: '^(klatchat|neon|tqdm).*'
+      packages-exclude: '^(klatchat|neon|tqdm|click).*'
