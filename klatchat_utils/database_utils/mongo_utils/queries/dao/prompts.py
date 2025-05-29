@@ -142,10 +142,11 @@ class PromptsDAO(MongoDocumentDAO):
                 LOG.warning(
                     f"Prompt State - {prompt_state.name} has no db store properties"
                 )
-            else:
-                store_key = prompt_state_structure["key"]
-                store_type = prompt_state_structure["type"]
-                store_data = prompt_state_structure["data"]
+                return False
+            for prop in prompt_state_structure:
+                store_key = prop["key"]
+                store_type = prop["type"]
+                store_data = prop["data"]
                 if user_id in list(prompt.get("data", {}).get(store_key, {})):
                     LOG.error(
                         f"user_id={user_id} tried to duplicate data to prompt_id={prompt_id}, store_key={store_key}"
@@ -158,6 +159,7 @@ class PromptsDAO(MongoDocumentDAO):
                         data_action="push" if store_type == list else "set",
                     )
             return True
+        return False
 
     def _add_participant(self, prompt_id: str, user_id: str):
         return self._execute_query(
@@ -170,23 +172,30 @@ class PromptsDAO(MongoDocumentDAO):
     @staticmethod
     def _get_prompt_state_structure(
         prompt_state: PromptStates, user_id: str, message_id: str
-    ):
+    ) -> list[dict] | None:
         prompt_state_mapping = {
             # PromptStates.WAIT: {'key': 'participating_subminds', 'type': list},
-            PromptStates.RESP: {
+            PromptStates.RESP: [{
                 "key": f"proposed_responses.{user_id}",
                 "type": dict,
                 "data": message_id,
-            },
-            PromptStates.DISC: {
-                "key": f"submind_opinions.{user_id}",
-                "type": dict,
-                "data": message_id,
-            },
-            PromptStates.VOTE: {
+            }],
+            PromptStates.DISC: [
+                {
+                    "key": f"submind_opinions.{user_id}",
+                    "type": dict,
+                    "data": message_id,
+                },
+                {
+                    "key": f"submind_discussion_history.{user_id}",
+                    "type": list,
+                    "data": message_id,
+                }
+            ],
+            PromptStates.VOTE: [{
                 "key": f"votes.{user_id}",
                 "type": dict,
                 "data": message_id,
-            },
+            }],
         }
         return prompt_state_mapping.get(prompt_state)

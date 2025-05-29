@@ -67,6 +67,8 @@ class ShoutsDAO(MongoDocumentDAO):
             "votes",
         ):
             message_ids.extend(list(prompt_data.get(column, {}).values()))
+        for msg_ids in prompt_data.get("submind_discussion_history", {}).values():
+            message_ids.extend(msg_ids)
         return self.list_contains(source_set=message_ids)
 
     def fetch_audio_data(self, message_id: str) -> str | None:

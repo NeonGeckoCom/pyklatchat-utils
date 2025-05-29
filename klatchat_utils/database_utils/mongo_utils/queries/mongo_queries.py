@@ -234,6 +234,12 @@ def fetch_prompt_data(
                             .get("message_text")
                             or msg_id
                         )
+                multiround_discussion_msg_ids = prompt["data"].get("submind_discussion_history", {}).pop(user, [])
+                prompt["data"].setdefault("submind_discussion_history", {})[nick] = [
+                    prompt["message_mapping"].get(msg_id, [{}])[0].get("message_text") or msg_id
+                    for msg_id in multiround_discussion_msg_ids
+                    if msg_id
+                ]
             prompt["data"]["participating_subminds"] = [
                 prompt["user_mapping"][x][0]["nickname"]
                 for x in prompt["data"]["participating_subminds"]
