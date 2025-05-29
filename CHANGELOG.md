@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.1a2](https://github.com/NeonGeckoCom/pyklatchat-utils/tree/0.0.1a2) (2025-05-29)
+
+[Full Changelog](https://github.com/NeonGeckoCom/pyklatchat-utils/compare/0.0.1a1...0.0.1a2)
+
+**Merged pull requests:**
+
+- Added Multi-Round Discussion handler prompts [\#2](https://github.com/NeonGeckoCom/pyklatchat-utils/pull/2) ([NeonKirill](https://github.com/NeonKirill))
+
 ## [0.0.1a1](https://github.com/NeonGeckoCom/pyklatchat-utils/tree/0.0.1a1) (2025-02-25)
 
 [Full Changelog](https://github.com/NeonGeckoCom/pyklatchat-utils/compare/c814233a621511e4163c7c2801db059b47123779...0.0.1a1)
